@@ -133,7 +133,7 @@ int main() {
 
     delete deviceInfo;
     cv::destroyAllWindows();
-
+//testing
     return 0;
 }
 
