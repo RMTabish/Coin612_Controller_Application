@@ -10,6 +10,8 @@
 #include "time.h"
 #include <stdlib.h>
 #include <SDL/SDL.h>
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
 // Define your camera's width and height
 #define WIDTH 640
 #define HEIGHT 512
