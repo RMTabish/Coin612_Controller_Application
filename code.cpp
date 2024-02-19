@@ -12,6 +12,7 @@
 #include <SDL/SDL.h>
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
+//for recording the frames we will be compressing it and storing them 
 // Define your camera's width and height
 #define WIDTH 640
 #define HEIGHT 512
