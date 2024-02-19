@@ -12,6 +12,8 @@
 #include <SDL/SDL.h>
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
+cv::VideoWriter videoWriter;
+bool record = false;
 //for recording the frames we will be compressing it and storing them 
 // Define your camera's width and height
 #define WIDTH 640
@@ -101,6 +103,22 @@ int main() {
         std::cerr << "No devices found." << std::endl;
         return -1;
     }
+//video thing
+    int choice;
+    std::cout << "Enter 1 to only view or 2 to view and record: ";
+    std::cin >> choice;
+    record = (choice == 2);
+    if (record) {
+        std::string outputPath = "./recorded_videos";
+        std::string videoFile = outputPath + "/output.avi";
+        int fourcc = cv::VideoWriter::fourcc('X', 'V', 'I', 'D'); 
+        videoWriter.open(videoFile, fourcc, 20.0, cv::Size(WIDTH, HEIGHT), true);
+        if (!videoWriter.isOpened()) {
+            std::cerr << "Could not open the output video file for write\n";
+            return -1;
+        }
+    }
+
 
     // Initialize OpenCV window
     cv::namedWindow("Frame", cv::WINDOW_AUTOSIZE);
@@ -114,7 +132,8 @@ int main() {
 
     // Endpoint communication is enabled on device 1
     ret = guide_usb_opencommandcontrol(1, serialCallBack);
-    if (ret < 0) {
+    if (ret
+     < 0) {
         std::cerr << "Command control for device 1 failed: " << ret << std::endl;
         return ret;
     }
@@ -136,19 +155,22 @@ int main() {
 
     delete deviceInfo;
     cv::destroyAllWindows();
-//testing
+ //testing
     return 0;
 }
-
 int frameCallBack(int id, guide_usb_frame_data_t *pVideoData) {
-    // Assuming YUV422 format for demonstration
-    cv::Mat yuvImg(HEIGHT, WIDTH, CV_8UC2, pVideoData->frame_yuv_data); // Create an OpenCV Mat from the YUV data
+    cv::Mat yuvImg(HEIGHT, WIDTH, CV_8UC2, pVideoData->frame_yuv_data);
     cv::Mat bgrImg;
-    cv::cvtColor(yuvImg, bgrImg, cv::COLOR_YUV2BGR_UYVY); // Convert YUV to BGR for OpenCV compatibility
+    cv::cvtColor(yuvImg, bgrImg, cv::COLOR_YUV2BGR_UYVY);
 
-    cv::imshow("Frame", bgrImg); // Display the frame
-    cv::waitKey(1); // Refresh window
+    if (record) {
+        videoWriter.write(bgrImg);
+    }
 
-    return 0;
+    cv::imshow("Frame", bgrImg);
+    int key = cv::waitKey(1);
+    if (key == 27) { 
+        record = false; 
+        return -1; 
+    }
 }
-

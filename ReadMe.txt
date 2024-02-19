@@ -1,4 +1,6 @@
 gcc -I./include Demo.c -L./lib -lGuideSCUSB2 -lpthread -lm -ludev -lSDL -o Demo
+g++ -I./include -o demo code.cpp `pkg-config --cflags --libs opencv4` -L./lib -lGuideSCUSB2 -lpthread -lm -ludev -lSDL
+
 
 Note: If you are prompted not to find sdl.h, please install the following library
 
