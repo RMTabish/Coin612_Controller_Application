@@ -112,7 +112,7 @@ int main() {
         std::string outputPath = "./recorded_videos";
         std::string videoFile = outputPath + "/output.avi";
         int fourcc = cv::VideoWriter::fourcc('X', 'V', 'I', 'D'); 
-        videoWriter.open(videoFile, fourcc, 20.0, cv::Size(WIDTH, HEIGHT), true);
+        videoWriter.open(videoFile, fourcc, 30.0, cv::Size(WIDTH, HEIGHT), true);
         if (!videoWriter.isOpened()) {
             std::cerr << "Could not open the output video file for write\n";
             return -1;
